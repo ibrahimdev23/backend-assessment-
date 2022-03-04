@@ -1,0 +1,24 @@
+
+
+
+
+
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+
+
+ul {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    text-decoration-style: none;
+}
+
+li {
+    list-style: none;
+}
