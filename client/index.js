@@ -1,87 +1,88 @@
-
+const textForm = document.getElementById("text-form")
+const inputText = document.getElementById("input-text")
+const taskContainer = document.getElementById("tasklist");
+const quoteBtn = document.getElementById("quoteBtn")
+const quotes = document.querySelector(".quotes")
 
 document.getElementById("complimentButton").onclick = function () {
-    axios.get("http://localhost:4000/api/compliment/")
-        .then(function (response) {
-          const data = response.data;
-          alert(data);
-        });
-  };
-
-
-  const fortuneBtn = document.getElementById("fortuneBtn").addEventListener('click', () => {
-        axios.get('http://localhost:4000/api/fortune/')
-             .then((res) => {
-                const fortuneData = res.data
-                alert(fortuneData)
-             })
-        
-
-  })
-
-
-
-  const submitBtn = document.querySelector('.submitBtn')
-  const userInput = document.querySelector('.input')
-  const list = document.querySelector('.todolist')
- 
-
-
-
-// submitBtn.addEventListener('click', (e)=> {
-//     e.preventDefault()
-
-//     let item = userInput.value
-//     console.log(item)
-
-//     const newItem = document.createElement('li')
-//     const newBtn = document.createElement('button')
-//     newBtn.innerHTML = "Remove"
-//     newBtn.classList.add('remove')
+  axios.get("http://localhost:4000/api/compliment")
+    .then(function (res) {
+      const data = res.data;
+      alert(data);
+    });
+};
     
-//     const newInput = {
-//         text: userInput.value
-//     }
-
-
-//     newItem.appendChild(newBtn)
-//     list.appendChild(newItem)
-
-//    const newItems = {
-//        text: userInput.value
-//    }
-
-//     axios.post('http://localhost:4000/api/showlist', newInput)
-//         .then(res => {
-//             showList(res.data)
-//             console.log(res.data) 
-//         }) 
- 
-//     let removeBtn = document.querySelectorAll('.remove')
-//     removeBtn.forEach((item) => {
-//     item.addEventListener('click', removeItem)
-
-//     })
-//     userInput.value = ' '
+document.getElementById("fortuneButton").onclick = function () {
+  axios.get("http://localhost:4000/api/fortune")
+    .then(function (res) {
+      const data = res.data;
+      alert(data);
+    });
+};
     
-//   })
 
-// const showList = (items) => {
+function displayTaskList(arr){
+  while(taskContainer.firstChild){
+    taskContainer.removeChild(taskContainer.firstChild)
+  }
+  
+  for (let i = 0; i < arr.length; i++){
+    const newTask = document.createElement("div");
+    
+    newTask.innerHTML = `<p>${arr[i].text}</p><button class="delete-btn" value ="${arr[i].id}">Delete</button>`
+    
+    taskContainer.appendChild(newTask);
+    
+    let removeBtns = document.getElementsByClassName('delete-btn');
+    
+    for (let i = 0; i < removeBtns.length; i++){
+      removeBtns[i].addEventListener('click', deleteTask)
+    }
+  }
+}
 
-//     while(list.firstChild){
-//         list.removeChild(list.firstChild)
-//     }
-// }
+const deleteTask = (e) => {
+  axios.delete(`http://localhost:4000/api/list/${e.target.value}`)
+    .then((res) => {
+      displayTaskList(res.data);
+    });
+};
+
+textForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const newDisplayText = {
+    text: inputText.value
+  }
+
+  axios.post("http://localhost:4000/api/list", newDisplayText)
+    .then(res => {
+      console.log((res.data));
+      displayTaskList(res.data);
+    });
+
+  inputText.value = '';
+})
 
 
 
 
-//   const removeItem = () => {
-//       axios.delete('"http://localhost:4000/api/list/${e.target.value}')
-//             .then((res) => {
-//                 alert('item removed from list')
-//             })
-//   }
+document.getElementById("quoteBtn").onclick = function () {
+  axios.get("http://localhost:4000/api/quote")
+    .then(function (res) {
+      const data = res.data;
+      alert(data);
+
+
+      let displayQuotes = document.createElement('p')
+      quotes.appendChild(displayQuotes)
+      displayQuotes.textContent = data.value
+
+      
+
+    });
+
+};
 
 
 
